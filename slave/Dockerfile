@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 LABEL MAINTAINER="Kasun Ranasinghe <kasunranasinghe303@gmail.com>"
-LABEL Description="This is a base image, which allows connecting Jenkins agents via JNLP protocols" Vendor="Jenkins project" Version="3.35-3"
+LABEL Description="This is a base image, which allows connecting Jenkins agents via JNLP protocols"
 
 USER root
 RUN apt-get update
