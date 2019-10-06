@@ -17,5 +17,5 @@ RUN /usr/local/bin/install-plugins.sh simple-theme-plugin
 RUN /usr/local/bin/install-plugins.sh kubernetes
 
 VOLUME /var/jenkins_home
-USER root
+
 USER jenkins
