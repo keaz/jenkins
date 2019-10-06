@@ -32,10 +32,6 @@ items:
             env:
               - name: JAVA_OPTS
                 value: -Djenkins.install.runSetupWizard=false
-              - name: JENKINS_USERNAME
-                value: keaz
-              - name: JENKINS_PASSWORD
-                value: KeazT88*
             ports:
               - name: http-port
                 containerPort: 8080

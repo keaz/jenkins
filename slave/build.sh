@@ -4,7 +4,7 @@ if [[ -z "$VERSION" ]]
 then
     VERSION="latest"
 fi
-DOCKER_IMAGE=keaz/jenkins/slave:${VERSION}
+DOCKER_IMAGE=keaz/jenkins-slave:${VERSION}
 PROJECT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 tput setaf 7;
 tput bold setaf 1; echo "Create image using ${VERSION} tag"
