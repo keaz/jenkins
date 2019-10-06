@@ -1,0 +1,91 @@
+---
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: "jenkins-master-deployment"
+    labels: 
+      app: jenkins-master
+      version: "latest"
+      group: "jenkins"
+    namespace: "jenkins"
+  spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          app: "jenkins-master"
+          version: "latest"
+          group: "jenkins"
+    template:
+      metadata:
+        labels:
+          app: jenkins-master
+          version: "latest"
+          group: "jenkins"
+      spec:
+        containers:
+          - name: "jenkins-master"
+            image: "keaz/jenkins/master:latest"
+            imagePullPolicy: "IfNotPresent"
+            env:
+              - name: JAVA_OPTS
+                value: -Djenkins.install.runSetupWizard=false
+              - name: JENKINS_USERNAME
+                value: keaz
+              - name: JENKINS_PASSWORD
+                value: KeazT88*
+            ports:
+              - name: http-port
+                containerPort: 8080
+              - name: jnlp-port
+                containerPort: 50000
+            volumeMounts:
+              - name: jenkins-home
+                mountPath: "/var/jenkins_home"
+        volumes:
+          - name: jenkins-home
+            persistentVolumeClaim: 
+              claimName: "jenkins-volume-claim"
+              readOnly: false 
+- apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "jenkins-master"
+      version: "latest"
+      group: "jenkins"
+    namespace: "jenkins"
+    name: "jenkins-master-service"
+  spec:
+    ports:
+    - name: "http"
+      port: 80
+      targetPort: 8080
+    - name: "jnlp"
+      port: 50000
+      targetPort: 50000
+    selector:
+      app: "jenkins-master"
+      version: "latest"
+      group: "jenkins"
+    type: "ClusterIP"      
+- apiVersion: "extensions/v1beta1"
+  kind: "Ingress"
+  metadata:
+    labels:
+      app: "jenkins-master"
+      version: "latest"
+      group: "jenkins"
+    namespace: "jenkins"
+    name: "jenkins-master-ingress"
+  spec:
+    rules:
+    - host: "jenkins"
+      http:
+        paths:
+        - backend:
+            serviceName: "jenkins-master-service"
+            servicePort: 80
+          path: "/"
