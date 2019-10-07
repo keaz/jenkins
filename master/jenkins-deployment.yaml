@@ -27,7 +27,7 @@ items:
       spec:
         containers:
           - name: "jenkins-master"
-            image: "keaz/jenkins/master:latest"
+            image: "keaz/jenkins-master:latest"
             imagePullPolicy: "IfNotPresent"
             env:
               - name: JAVA_OPTS
