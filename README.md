@@ -20,3 +20,5 @@ spec:
   hostPath:
     path: "<your host path>"
 ```
+
+https://medium.com/faun/how-to-setup-scalable-jenkins-on-kubernetes-f5c1b7d439cd
