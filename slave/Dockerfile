@@ -7,21 +7,7 @@ USER root
 RUN apt-get update
 RUN apt-get install -y openjdk-11-jre-headless
 
-RUN apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common 
-
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"    
-
-RUN apt-get update
-RUN apt-get install -y docker-ce docker-ce-cli containerd.io
+RUN apt-get install -y docker.io
 
 ARG VERSION=3.35
 ARG user=jenkins
@@ -35,6 +21,7 @@ LABEL Description="This is a base image, which provides the Jenkins agent execut
 
 ARG AGENT_WORKDIR=/home/${user}/agent
 
+RUN apt-get install -y curl
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
 RUN apt-get update && apt-get install git-lfs
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
