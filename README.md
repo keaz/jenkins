@@ -22,3 +22,4 @@ spec:
 ```
 
 https://medium.com/faun/how-to-setup-scalable-jenkins-on-kubernetes-f5c1b7d439cd
+https://www.youtube.com/watch?v=768SxaFkvQ4
