@@ -23,3 +23,9 @@ spec:
 
 https://medium.com/faun/how-to-setup-scalable-jenkins-on-kubernetes-f5c1b7d439cd
 https://www.youtube.com/watch?v=768SxaFkvQ4
+
+###### docker jenkins-master 
+https://hub.docker.com/repository/docker/keaz/jenkins-master
+
+###### docker jenkins-slave 
+https://hub.docker.com/repository/docker/keaz/jenkins-slave
