@@ -19,8 +19,7 @@ RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
-RUN apt-get update   
-RUN apt-cache madison docker-ce-cli
+RUN apt-get update
 RUN apt-get install -y docker-ce-cli
 
 ARG VERSION=3.35
@@ -31,19 +30,24 @@ ARG gid=1000
 
 RUN groupadd -g ${gid} ${group}
 RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
-LABEL Description="This is a base image, which provides the Jenkins agent executable (agent.jar)" Vendor="Jenkins project" Version="${VERSION}"
 
 ARG AGENT_WORKDIR=/home/${user}/agent
 
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
 RUN apt-get update && apt-get install -y git-lfs
-RUN apt-get clean
-RUN apt-get autoremove
+
 
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/agent.jar \
   && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
+
+RUN apt-get purge -y \
+    apt-transport-https \
+    curl \
+    gnupg-agent
+
+RUN apt-get clean -y && apt-get autoremove -y
 
 USER ${user}
 ENV AGENT_WORKDIR=${AGENT_WORKDIR}
