@@ -32,4 +32,5 @@ https://hub.docker.com/repository/docker/keaz/jenkins-slave
 
 ### 2020/02/08
 New Jenkins master image keaz/jenkins-master:alpine
+
 New Jenkins slave image keaz/jenkins-slave:slim
