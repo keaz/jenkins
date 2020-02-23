@@ -1,3 +1,5 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/keaz/jenkins-slave?label=Jenkins%20Slave%20docker%20pulls)
+![Docker Pulls](https://img.shields.io/docker/pulls/keaz/jenkins-master?label=Jenkins%20Master%20docker%20pulls)
 # Jenkins for K8s
 
 This is an reference project that aims to explains how to run a Jenkins cluster in K8s.
