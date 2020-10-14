@@ -22,7 +22,7 @@ RUN add-apt-repository \
 RUN apt-get update
 RUN apt-get install -y docker-ce-cli
 
-ARG VERSION=3.35
+ARG VERSION=4.5
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
