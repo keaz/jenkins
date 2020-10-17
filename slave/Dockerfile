@@ -1,66 +1,18 @@
-FROM ubuntu:18.04
+FROM jenkins/inbound-agent:alpine
 
 LABEL MAINTAINER="Kasun Ranasinghe <kasunranasinghe303@gmail.com>"
 LABEL Description="This is a base image, which allows connecting Jenkins agents via JNLP protocols"
 
 USER root
-RUN apt-get update
-RUN apt-get install -y openjdk-11-jre-headless
+# Alpine seems to come with libcurl baked in, which is prone to mismatching
+# with newer versions of curl. The solution is to upgrade libcurl.
+RUN apk update && apk add -u libcurl curl
+# Install Docker client
+ARG DOCKER_VERSION=18.03.0-ce
 
-RUN apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -  
-RUN apt-key fingerprint 0EBFCD88 
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-RUN apt-get update
-RUN apt-get install -y docker-ce-cli
+RUN curl -fsSL https://download.docker.com/linux/static/stable/`uname -m`/docker-$DOCKER_VERSION.tgz | tar --strip-components=1 -xz -C /usr/local/bin docker/docker
+RUN touch /debug-flag
+#VOLUME /var/run/docker.sock
+#RUN chown jenkins:jenkins /var/run/docker.sock
 
-ARG VERSION=4.5
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
-
-RUN groupadd -g ${gid} ${group}
-RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
-
-ARG AGENT_WORKDIR=/home/${user}/agent
-
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get update && apt-get install -y git-lfs
-
-
-RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
-  && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/agent.jar \
-  && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
-
-RUN apt-get purge -y \
-    apt-transport-https \
-    curl \
-    gnupg-agent
-
-RUN apt-get clean -y && apt-get autoremove -y
-
-USER ${user}
-ENV AGENT_WORKDIR=${AGENT_WORKDIR}
-RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
-
-VOLUME /home/${user}/.jenkins
-VOLUME ${AGENT_WORKDIR}
-WORKDIR /home/${user}
-
-ARG user=jenkins
-USER root
-COPY jenkins-agent /usr/local/bin/jenkins-agent
-RUN chmod +x /usr/local/bin/jenkins-agent &&\
-    ln -s /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-slave
-
-ENTRYPOINT ["jenkins-agent"]
+#USER jenkins

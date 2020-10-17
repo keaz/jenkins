@@ -78,7 +78,7 @@ items:
     name: "jenkins-master-ingress"
   spec:
     rules:
-    - host: "jenkins"
+    - host: "jenkins.local"
       http:
         paths:
         - backend:
